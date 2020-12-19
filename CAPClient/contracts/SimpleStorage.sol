@@ -92,5 +92,10 @@ contract SimpleStorage {
   function getCAPNumber() external view returns(uint){
     return CAPs[msg.sender];
   }
+
+  function patientExists() external returns(bool){
+    if(patients[msg.sender].exists) return true;
+    return false;
+  }
   
 }

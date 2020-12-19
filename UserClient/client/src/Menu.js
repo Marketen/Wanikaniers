@@ -3,11 +3,64 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import "./App.css";
 class Menu extends Component {
-    state = {enviado: null}
+    state = {enviado: null,pendingConfirm: null}
+
+    componentDidMount = () => {
+        this.props.utils.contract.events.symptomsAdded()
+            .on('data', async (event) => {
+                console.log(event.returnValues);
+                this.confirmRegisteredSymptoms(event.returnValues);
+            })
+            .on('error', console.error);
+    }
+
+    confirmRegisteredSymptoms = (eventParams) => {
+        if (eventParams[0] == this.props.utils.publicKey) {
+            this.setState({ pendingConfirm: false })
+          }
+    }
+
+    registerSymptoms= async (fever) => {
+        let f = Math.floor(parseFloat(fever)*100);
+        const gasEstimate = await this.props.utils.contract.methods.addSymptoms(f).estimateGas({ from: this.props.utils.publicKey });
+
+        const tx = {
+            // this could be provider.addresses[0] if it exists
+            from: this.props.utils.publicKey,
+            // target address, this could be a smart contract address
+            to: "0x4C039E427DaA2478ea5cDDb4DeCC38d4Ba6bCB1f",
+            // this encodes the ABI of the method and the arguements
+            data: this.props.utils.contract.methods.addSymptoms(f).encodeABI(),
+            gasPrice: 0,
+            gas: gasEstimate
+        };
+
+        const signPromise = this.props.utils.web3.eth.accounts.signTransaction(tx, this.props.utils.privateKey);
+
+        signPromise.then((signedTx) => {
+            // raw transaction string may be available in .raw or 
+            // .rawTransaction depending on which signTransaction
+            // function was called
+            const sentTx = this.props.utils.web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+            sentTx.on("receipt", receipt => {
+                console.log("contract call ok")
+                console.log(receipt);
+            });
+            sentTx.on("error", err => {
+                console.log("failed contract call")
+                console.log(err)
+            });
+        }).catch((err) => {
+            // do something when promise fails
+            console.log(err)
+        });
+
+        this.setState({ pendingConfirm: true })
+    }
 
     render() {
         let output;
-        if (this.state.enviado == null) {
+        if (this.state.pendingConfirm == null) {
             output = 
             <div className = "center, form">
                 <form>
@@ -56,14 +109,31 @@ class Menu extends Component {
 
 
                 </form>
+                <button onClick={() => this.registerSymptoms(
+                    document.getElementById('quantity').value
+                )}>SUBMIT</button>
             </div>
+            
 
         }
+
+        else if (this.state.pendingConfirm == true) {
+            output = <div>
+                Waiting for confirmation...
+            </div>
+        }
+
+        else{
+            output = <div>
+                Registered symptoms successfully.
+            </div>
+        }
+
         return(
             <div>
                 <br></br><br></br>
                 <div className = "upperText">
-                Logueado con la cuenta: {this.props.cuenta}
+                
                 </div>
             <div>{output}</div>
             </div>

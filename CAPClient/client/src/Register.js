@@ -47,7 +47,7 @@ class Register extends Component {
             // this could be provider.addresses[0] if it exists
             from: this.props.utils.publicKey,
             // target address, this could be a smart contract address
-            to: "0x821b80A69443b77d8561a6df1D829802d8002Ba3",
+            to: "0x4C039E427DaA2478ea5cDDb4DeCC38d4Ba6bCB1f",
             // this encodes the ABI of the method and the arguements
             data: this.props.utils.contract.methods.registerPatient(keys.address, CIP, email).encodeABI(),
             gasPrice: 0,
