@@ -45,16 +45,16 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance }, this.runExample);
-      console.log("OK")
-      this.state.contract.events.test({})
-    .on('data', async (event)=>{
-        console.log(event.returnValues);
-        let keys = web3.eth.accounts.create();
-        //this.sendMail(keys.address, keys.privateKey)
-        //this.sendMail();
+    //   console.log("OK")
+    //   this.state.contract.events.test({})
+    // .on('data', async (event)=>{
+    //     console.log(event.returnValues);
+    //     let keys = web3.eth.accounts.create();
+    //     this.sendMail(keys.address, keys.privateKey)
+    //     this.sendMail();
         // Do something here
-    })
-    .on('error', console.error);
+  //  })
+    //.on('error', console.error);
       /*this.state.contract.getPastEvents("allEvents",
     {                               
         fromBlock: 1,     
@@ -87,41 +87,41 @@ class App extends Component {
     //console.log(contract.events)
   };
 
-  runExample = async (x) => {
-    const { accounts, contract } = this.state;
+  // runExample = async (x) => {
+  //   const { accounts, contract } = this.state;
 
-    if(x==null) x=5
+  //   if(x==null) x=5
 
-    const gasEstimate = await contract.methods.set(x).estimateGas({ from: "0x32DdA88e9c31fb92bCa448528eA4ae0AC9C6A63e" });
+  //   //const gasEstimate = await contract.methods.set(x).estimateGas({ from: "0x32DdA88e9c31fb92bCa448528eA4ae0AC9C6A63e" });
 
-    const tx = {
-      // this could be provider.addresses[0] if it exists
-      from: "0x32DdA88e9c31fb92bCa448528eA4ae0AC9C6A63e", 
-      // target address, this could be a smart contract address
-      to: "0x837e55e5cA244BCB94f7C304f4b216eF11813a69", 
-      // this encodes the ABI of the method and the arguements
-      data: contract.methods.set(x).encodeABI() ,
-      gasPrice: 0,
-      gas: gasEstimate
-    };
+  //   const tx = {
+  //     // this could be provider.addresses[0] if it exists
+  //     from: "0x32DdA88e9c31fb92bCa448528eA4ae0AC9C6A63e", 
+  //     // target address, this could be a smart contract address
+  //     to: "0x837e55e5cA244BCB94f7C304f4b216eF11813a69", 
+  //     // this encodes the ABI of the method and the arguements
+  //     data: contract.methods.set(x).encodeABI() ,
+  //     gasPrice: 0,
+  //    // gas: gasEstimate
+  //   };
 
-    const signPromise = this.state.web3.eth.accounts.signTransaction(tx, "0xae29e1a8ae41b8dd041abab55b05a824a20132721f2a20a244b4811b51e9c100");
+    // const signPromise = this.state.web3.eth.accounts.signTransaction(tx, "0xae29e1a8ae41b8dd041abab55b05a824a20132721f2a20a244b4811b51e9c100");
 
-    signPromise.then((signedTx) => {
-      // raw transaction string may be available in .raw or 
-      // .rawTransaction depending on which signTransaction
-      // function was called
-      const sentTx = this.state.web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-      sentTx.on("receipt", receipt => {
-        console.log("contract call ok")
-      });
-      sentTx.on("error", err => {
-        console.log("failed contract call")
-      });
-    }).catch((err) => {
-      // do something when promise fails
-      console.log(err)
-    });
+    // signPromise.then((signedTx) => {
+    //   // raw transaction string may be available in .raw or 
+    //   // .rawTransaction depending on which signTransaction
+    //   // function was called
+    //   const sentTx = this.state.web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+    //   sentTx.on("receipt", receipt => {
+    //     console.log("contract call ok")
+    //   });
+    //   sentTx.on("error", err => {
+    //     console.log("failed contract call")
+    //   });
+    // }).catch((err) => {
+    //   // do something when promise fails
+    //   console.log(err)
+    // });
 
 
 
@@ -132,12 +132,11 @@ class App extends Component {
     //await contract.methods.set(x).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+    //const response = await contract.methods.get().call();
 
     // Update state with the result.
     //this.setState({ storageValue: response });
     //console.log(contract.events)
-  };
 
   
 
