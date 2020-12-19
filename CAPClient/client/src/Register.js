@@ -4,7 +4,7 @@ import emailjs from "emailjs-com";
 
 import "./App.css";
 class Register extends Component {
-    state = { pendingConfirm: null, CIP:null, email:null, patientPublicKey:null, patientPrivateKey:null }
+    state = { pendingConfirm: null, CIP:null, email:null, patientPublicKey:null, patientPrivateKey:null, errorMsg:null }
 
     componentDidMount = () => {
         this.props.utils.contract.events.patientRegistered()
@@ -40,6 +40,13 @@ class Register extends Component {
     }
 
     registerPatient = async (CIP, email) => {
+        let searchPatient = await this.props.utils.contract.methods.getPatientfromCIP(CIP).call({from: this.props.utils.publicKey})
+        console.log(searchPatient);
+        if (searchPatient.exists) {
+            this.setState({errorMsg:"The patient was already registered."})
+            return;
+        }
+
         let keys = this.props.utils.web3.eth.accounts.create();
         const gasEstimate = await this.props.utils.contract.methods.registerPatient(keys.address, CIP, email).estimateGas({ from: this.props.utils.publicKey });
 
@@ -80,7 +87,8 @@ class Register extends Component {
 
     render() {
         let output;
-        if (this.state.pendingConfirm == null) {
+        if (this.state.errorMsg != null) output = <div>{this.state.errorMsg}</div>
+        else if (this.state.pendingConfirm == null) {
             output = <div className ="center">
                 <h1>Register a patient</h1>
             CIP<br></br>
