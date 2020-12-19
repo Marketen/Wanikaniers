@@ -10,22 +10,23 @@ import Register from "./Register"
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null, loggedAcc: null };
+  state = { storageValue: 0, web3: null, accounts: null, contract: null, loggedAcc: null, privateKey: null, publicKey: null, pendingConfirm: null, errorMsg: null };
 
-  sendMail = (pub,priv) => {
+  sendMail = (pub, priv) => {
     emailjs.init("user_qaiPkK1fjsSPioc5W63I7");
-      emailjs.send(
-        'service_ese7bjv', 'template_tcf188f',
-        {message: "public key: " + pub + "\nprivate key: " +priv,
-                from_name: "wanikaniers",
-                to_email: "marcfont12@gmail.com"
+    emailjs.send(
+      'service_ese7bjv', 'template_tcf188f',
+      {
+        message: "public key: " + pub + "\nprivate key: " + priv,
+        from_name: "wanikaniers",
+        to_email: "marcfont12@gmail.com"
       }
-        ).then(res => {
-          console.log('Email successfully sent!')
-        })
-        // Handle errors here however you like, or use a React error boundary
-        .catch(err => console.error('Oh well, you failed. Here some thoughts on the error that occured:', err))
-      
+    ).then(res => {
+      console.log('Email successfully sent!')
+    })
+      // Handle errors here however you like, or use a React error boundary
+      .catch(err => console.error('Oh well, you failed. Here some thoughts on the error that occured:', err))
+
   }
 
   componentDidMount = async () => {
@@ -44,22 +45,20 @@ class App extends Component {
         deployedNetwork && deployedNetwork.address,
       );
 
-      
+
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance });
-    //   console.log("OK")
-    //   this.state.contract.events.test({})
-    // .on('data', async (event)=>{
-    //     console.log(event.returnValues);
-    //     let keys = web3.eth.accounts.create();
-
-    //     this.sendMail(keys.address, keys.privateKey)
-    //     this.sendMail();
-        // Do something here
-  //  })
-    //.on('error', console.error);
+      //   console.log("OK")
+      this.state.contract.events.CAPRegistered({})
+        .on('data', async (event) => {
+          console.log(event.returnValues);
+          //let keys = web3.eth.accounts.create();
+          this.confirmRegisteredCAP(event.returnValues);
+          //this.sendMail(keys.address, keys.privateKey)
+        })
+        .on('error', console.error);
 
       /*this.state.contract.getPastEvents("allEvents",
     {                               
@@ -68,7 +67,7 @@ class App extends Component {
     })                              
 .then(events => console.log(events))
 .catch((err) => console.error(err));*/
-     
+
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -81,7 +80,7 @@ class App extends Component {
   runExample2 = async (x) => {
     const { accounts, contract } = this.state;
 
-    if(x==null) x=5
+    if (x == null) x = 5
     // Stores a given value, 5 by default.
     await contract.methods.set(x).send({ from: accounts[0] });
 
@@ -111,61 +110,143 @@ class App extends Component {
   //    // gas: gasEstimate
   //   };
 
-    // const signPromise = this.state.web3.eth.accounts.signTransaction(tx, "0xae29e1a8ae41b8dd041abab55b05a824a20132721f2a20a244b4811b51e9c100");
+  // const signPromise = this.state.web3.eth.accounts.signTransaction(tx, "0xae29e1a8ae41b8dd041abab55b05a824a20132721f2a20a244b4811b51e9c100");
 
-    // signPromise.then((signedTx) => {
-    //   // raw transaction string may be available in .raw or 
-    //   // .rawTransaction depending on which signTransaction
-    //   // function was called
-    //   const sentTx = this.state.web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-    //   sentTx.on("receipt", receipt => {
-    //     console.log("contract call ok")
-    //   });
-    //   sentTx.on("error", err => {
-    //     console.log("failed contract call")
-    //   });
-    // }).catch((err) => {
-    //   // do something when promise fails
-    //   console.log(err)
-    // });
-    
-    // Stores a given value, 5 by default.
-    //await contract.methods.set(x).send({ from: accounts[0] });
+  // signPromise.then((signedTx) => {
+  //   // raw transaction string may be available in .raw or 
+  //   // .rawTransaction depending on which signTransaction
+  //   // function was called
+  //   const sentTx = this.state.web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+  //   sentTx.on("receipt", receipt => {
+  //     console.log("contract call ok")
+  //   });
+  //   sentTx.on("error", err => {
+  //     console.log("failed contract call")
+  //   });
+  // }).catch((err) => {
+  //   // do something when promise fails
+  //   console.log(err)
+  // });
 
-    // Get the value from the contract to prove it worked.
-    //const response = await contract.methods.get().call();
+  // Stores a given value, 5 by default.
+  //await contract.methods.set(x).send({ from: accounts[0] });
 
-    // Update state with the result.
-    //this.setState({ storageValue: response });
-    //console.log(contract.events)
+  // Get the value from the contract to prove it worked.
+  //const response = await contract.methods.get().call();
+
+  // Update state with the result.
+  //this.setState({ storageValue: response });
+  //console.log(contract.events)
+
+  checkIfCAPRegistered = async (publicKey, privateKey) => {
+    let registered = await this.state.contract.methods.getCAPNumber().call({ from: publicKey });
+    if (registered > 0) {
+      this.setState({ publicKey: publicKey, privateKey: privateKey, pendingConfirm: false });
+    } else {
+      await this.registerCAP(publicKey, privateKey);
+    }
+  }
+
+  registerCAP = async (publicKey, privateKey) => {
+    const gasEstimate = await this.state.contract.methods.registerCAP(20).estimateGas({ from: publicKey });
+
+    const tx = {
+      // this could be provider.addresses[0] if it exists
+      from: publicKey,
+      // target address, this could be a smart contract address
+      to: "0x821b80A69443b77d8561a6df1D829802d8002Ba3",
+      // this encodes the ABI of the method and the arguements
+      data: this.state.contract.methods.registerCAP(20).encodeABI(),
+      gasPrice: 0,
+      gas: gasEstimate
+    };
+
+    const signPromise = this.state.web3.eth.accounts.signTransaction(tx, privateKey);
+
+    signPromise.then((signedTx) => {
+      // raw transaction string may be available in .raw or 
+      // .rawTransaction depending on which signTransaction
+      // function was called
+      const sentTx = this.state.web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+      sentTx.on("receipt", receipt => {
+        console.log("contract call ok")
+        console.log(receipt);
+      });
+      sentTx.on("error", err => {
+        console.log("failed contract call")
+        console.log(err)
+      });
+    }).catch((err) => {
+      // do something when promise fails
+      console.log(err)
+    });
+
+    this.setState({ publicKey: publicKey, privateKey: privateKey, pendingConfirm: true })
+  }
+
+  confirmRegisteredCAP = (eventParams) => {
+    if (parseInt(eventParams[0]) > 0 && eventParams[1] == this.state.publicKey) {
+      this.setState({ pendingConfirm: false })
+    } else {
+      this.setState({ errorMsg: "couldn't register" })
+    }
+  }
+
+
 
   render() {
     let output;
-    if (this.state.loggedAcc != null) {  
-      output = 
-      <div>
-        logged acc
+    if (this.state.errorMsg != null) {
+      output = <div>{this.state.errorMsg}</div>
+    }
+
+    else if (this.state.publicKey == null) {
+      output = <div>
+        Public key:<br />
+        <input type="text" id="publicKey"></input><br></br>
+        Private key:<br />
+        <input type="text" id="privateKey"></input><br></br>
+        <button onClick={() => this.checkIfCAPRegistered(document.getElementById("publicKey").value, document.getElementById("privateKey").value)}>CAP Access</button>
+      </div>
+    }
+
+    else if (this.state.pendingConfirm) {
+      output = <div>Processing request ...</div>
+    }
+
+    else if (!this.state.pendingConfirm) {
+      output = <Menu utils={this.state}></Menu>
+    }
+
+
+
+
+    if (this.state.loggedAcc != null) {
+      output =
+        <div>
+          logged acc
       </div>
     }
     return (
-      <div>
-        <Router>
-          <Route exact={true} path="/" render={() => (
-        <div>
-        <div class = ""><Link to='/register'>Registrar nuevo CAP</Link></div>
-        <div class = ""><Link to='/login'>Login</Link></div>
-        </div>
-      )}/>
-        <Route path="/register" render={() => (
-          <Register functions={this.state}/>
-        )}/>
-        <Route path="/login" render={() => (
-          <Login functions={this.state}/>
-        )}/>
+      // <div>
+      //   <Router>
+      //     <Route exact={true} path="/" render={() => (
+      //   <div>
+      //   <div class = ""><Link to='/register'>Registrar nuevo CAP</Link></div>
+      //   <div class = ""><Link to='/login'>Login</Link></div>
+      //   </div>
+      // )}/>
+      //   <Route path="/register" render={() => (
+      //     <Register functions={this.state}/>
+      //   )}/>
+      //   <Route path="/login" render={() => (
+      //     <Login functions={this.state}/>
+      //   )}/>
 
-        </Router>
-        {output}
-      </div>
+      //   </Router>
+      //   {output}
+      // </div>
+      <div>{output}</div>
     );
   }
 }

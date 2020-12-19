@@ -30,8 +30,8 @@ contract SimpleStorage {
 
   uint CAPnumber = 0;
 
-  event patientRegistered(string CIP);
-  event CAPRegistered(uint id);
+  event patientRegistered(string CIP, string email);
+  event CAPRegistered(uint id, address);
   event symptomsAdded(address);
   event patientWithFeverFound(address);
 
@@ -40,7 +40,7 @@ contract SimpleStorage {
     CAPs[msg.sender] = CAPnumber;
     CAPThreshold[CAPnumber] = threshold;
 
-    emit CAPRegistered(CAPnumber);
+    emit CAPRegistered(CAPnumber, msg.sender);
   }
 
   function registerPatient(address patientAddress, string calldata CIP, string calldata email) external{
@@ -56,7 +56,7 @@ contract SimpleStorage {
     patientsFromCAP[CAPs[msg.sender]].push(CIP);
     activePatientsFromCAP[CAPs[msg.sender]] = activePatientsFromCAP[CAPs[msg.sender]]+1;
 
-    emit patientRegistered(CIP);
+    emit patientRegistered(CIP,email);
   }
 
   function getAllPatientsFromCAP() external view returns( patientData[] memory){
@@ -87,6 +87,10 @@ contract SimpleStorage {
 
   function getCAPThreshold() external view returns(uint){
     return CAPThreshold[CAPs[msg.sender]];
+  }
+
+  function getCAPNumber() external view returns(uint){
+    return CAPs[msg.sender];
   }
   
 }
