@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import "./App.css";
-class Menu extends Component {
-    state = {enviado: null}
+class Login extends Component {
+    state = {response: null, clicked: 3}
+
+    componentDidMount = () =>{
+        this.setState({response: null, clicked: 4});
+    }
+
 
     render() {
         let output;
@@ -11,16 +16,16 @@ class Menu extends Component {
     
         
         return(
-            <Router>
+
+                <Router>
                     <Route>
-                     <div className="topnav">
+                    <div className="topnav">
                          <Link to="/">Menu</Link>
-                        <Link to="/logout">Logout</Link>
                      </div>
                     </Route>
                 <br></br><br></br>
                 <div className = "upperText"></div>
-                MENU
+                LOGIN
                 {output}
                 </Router>
         )
@@ -28,4 +33,4 @@ class Menu extends Component {
 }
     
 
-export default Menu;
+export default Login;
