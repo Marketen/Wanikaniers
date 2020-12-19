@@ -8,18 +8,22 @@ class Search extends Component {
 
     searchPatient = async (CIP) => {
         let symptoms_array = await this.props.utils.contract.methods.getSymptomsfromCIP(CIP).call({ from: this.props.utils.publicKey });
-        let symptoms_string = symptoms_array.toString();
-        console.log("sintomas" + symptoms_string);
-        this.setState({symptoms: symptoms_string});
+        console.log(symptoms_array)
+
+        this.setState({symptoms: symptoms_array});
     }
 
     render() {
         let output;
         if (this.state.symptoms != null) {
-            output =
+            if(this.state.symptoms.length == 0) output = <div>No ha registrado ningún síntoma.</div>
+            else{output =
             <div>
-                {this.state.symptoms}
-            </div>
+                {this.state.symptoms.map(item => {
+                    let date = new Date((item.date)*1000);
+                    return <div>{date+" "+item.fever/100} </div>
+                })}
+            </div>}
         }
         return (
             <div className="form, center">
