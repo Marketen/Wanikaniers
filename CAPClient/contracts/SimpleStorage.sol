@@ -72,6 +72,20 @@ contract SimpleStorage {
     return ret;
   }
 
+  function getSymptomsfromCIP(string calldata CIP) external returns(symptoms[] memory){
+    address patient = addressFromCIP[CIP];
+    return symptomsFromPatient[patient];
+  }
+
+  function getPatientfromCIP(string calldata CIP) external returns(patientData memory){
+    address patient = addressFromCIP[CIP];
+    return patients[patient];
+  }
+
+  function searchPatientSymptoms(string calldata CIP) external {
+    //symptomsFromPatient[address];
+  }
+
   function addSymptoms(uint fever) public {
     symptoms memory data = symptoms({date: now, fever:fever});
     symptomsFromPatient[msg.sender].push(data);

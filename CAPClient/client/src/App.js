@@ -154,7 +154,7 @@ class App extends Component {
       // this could be provider.addresses[0] if it exists
       from: publicKey,
       // target address, this could be a smart contract address
-      to: "0x821b80A69443b77d8561a6df1D829802d8002Ba3",
+      to: "0x48eb9143d0431423ee02859f0D80b4B71Cc9bB41",
       // this encodes the ABI of the method and the arguements
       data: this.state.contract.methods.registerCAP(20).encodeABI(),
       gasPrice: 0,
@@ -201,11 +201,13 @@ class App extends Component {
     }
 
     else if (this.state.publicKey == null) {
-      output = <div>
+      output = <div className="form, center">
+        <br/><br/><br/><br/>
         Public key:<br />
         <input type="text" id="publicKey"></input><br></br>
         Private key:<br />
         <input type="text" id="privateKey"></input><br></br>
+        <br/>
         <button onClick={() => this.checkIfCAPRegistered(document.getElementById("publicKey").value, document.getElementById("privateKey").value)}>CAP Access</button>
       </div>
     }
@@ -228,24 +230,6 @@ class App extends Component {
       </div>
     }
     return (
-      // <div>
-      //   <Router>
-      //     <Route exact={true} path="/" render={() => (
-      //   <div>
-      //   <div class = ""><Link to='/register'>Registrar nuevo CAP</Link></div>
-      //   <div class = ""><Link to='/login'>Login</Link></div>
-      //   </div>
-      // )}/>
-      //   <Route path="/register" render={() => (
-      //     <Register functions={this.state}/>
-      //   )}/>
-      //   <Route path="/login" render={() => (
-      //     <Login functions={this.state}/>
-      //   )}/>
-
-      //   </Router>
-      //   {output}
-      // </div>
       <div>{output}</div>
     );
   }
