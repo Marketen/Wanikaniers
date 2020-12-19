@@ -33,7 +33,7 @@ contract SimpleStorage {
   event patientRegistered(string CIP, string email);
   event CAPRegistered(uint id, address);
   event symptomsAdded(address);
-  event patientWithFeverFound(address);
+  event patientWithFeverFound(patientData);
 
   function registerCAP(uint threshold) external {
     CAPnumber = CAPnumber+1;
@@ -95,7 +95,7 @@ contract SimpleStorage {
 
     emit symptomsAdded(msg.sender);
     if(fever > 3700){
-      emit patientWithFeverFound(msg.sender);
+      emit patientWithFeverFound(patients[msg.sender]);
     }
   }
 
