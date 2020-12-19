@@ -81,7 +81,7 @@ class Register extends Component {
     render() {
         let output;
         if (this.state.pendingConfirm == null) {
-            output = <div>
+            output = <div className ="center">
                 <h1>Register a patient</h1>
             CIP<br></br>
                 <input type="text" id="CIP"></input><br></br>

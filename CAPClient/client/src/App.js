@@ -201,11 +201,13 @@ class App extends Component {
     }
 
     else if (this.state.publicKey == null) {
-      output = <div>
+      output = <div className="form, center">
+        <br/><br/><br/><br/>
         Public key:<br />
         <input type="text" id="publicKey"></input><br></br>
         Private key:<br />
         <input type="text" id="privateKey"></input><br></br>
+        <br/>
         <button onClick={() => this.checkIfCAPRegistered(document.getElementById("publicKey").value, document.getElementById("privateKey").value)}>CAP Access</button>
       </div>
     }
@@ -228,24 +230,6 @@ class App extends Component {
       </div>
     }
     return (
-      // <div>
-      //   <Router>
-      //     <Route exact={true} path="/" render={() => (
-      //   <div>
-      //   <div class = ""><Link to='/register'>Registrar nuevo CAP</Link></div>
-      //   <div class = ""><Link to='/login'>Login</Link></div>
-      //   </div>
-      // )}/>
-      //   <Route path="/register" render={() => (
-      //     <Register functions={this.state}/>
-      //   )}/>
-      //   <Route path="/login" render={() => (
-      //     <Login functions={this.state}/>
-      //   )}/>
-
-      //   </Router>
-      //   {output}
-      // </div>
       <div>{output}</div>
     );
   }
