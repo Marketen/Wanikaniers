@@ -19,10 +19,10 @@ class Menu extends Component {
             .on('error', console.error);
     }
 
-    checkForInactivePatients = () =>{
+    checkForInactivePatients = async () =>{
         let allPatients = await this.props.utils.contract.methods.getAllPatientsFromCAP().call({from: this.props.utils.publicKey})
 
-        inactivePatients = []
+        var inactivePatients = []
         allPatients.forEach(patient => {
             if (Date().now - patient.lastCheck*1000 > 86400000) inactivePatients.push(patient)
             //send patients mail TODO
@@ -34,9 +34,8 @@ class Menu extends Component {
         emailjs.send(
             'service_ese7bjv', 'template_8ygocyr',
             {
-                CIP: patient.CIP,
-                fever: patient.fever / 100,
-                email: patient.email
+                CIP: patient[0][0],
+                email: patient[0][1]
             }
         ).then(res => {
             console.log('Email successfully sent!')
@@ -73,7 +72,7 @@ class Menu extends Component {
                     <List utils={this.props.utils} />
                 )} />
                 <Route exact={true} path="/" render={() => (
-                    <div>WaniTracking</div>
+                    <div><h1>WaniTracking</h1></div>
                 )} />
 
                 {/* <br></br><br></br>

@@ -28,7 +28,7 @@ class Menu extends Component {
             // this could be provider.addresses[0] if it exists
             from: this.props.utils.publicKey,
             // target address, this could be a smart contract address
-            to: "0xD063d7298631de65d518E8dc9395225aD066201E",
+            to: "0xdEA06AA5BF529f85E34cdFC78B4Ad181BddeF0C0",
             // this encodes the ABI of the method and the arguements
             data: this.props.utils.contract.methods.addSymptoms(f).encodeABI(),
             gasPrice: 0,
@@ -71,19 +71,19 @@ class Menu extends Component {
                         Temperatura corporal <input type="number" id="quantity" name="quantity" min="35" max="42"></input>
                     </fieldset>
                     <fieldset id = "pregunta3" className ="form-camp">
-                       Dolor de garganta <input type ="radio" id="pregunta1y" name ="preg3"></input> Si  <input type ="radio" id="pregunta1n"  name ="preg3"></input> No 
+                       Dolor de garganta <input type ="radio" id="pregunta2n" name ="preg3"></input> Si  <input type ="radio" id="pregunta2n"  name ="preg3"></input> No 
                     </fieldset>
                     <fieldset id = "pregunta4" className ="form-camp">
-                       Dolor de cabeza <input type ="radio" id="pregunta1y" name ="preg3"></input> Si  <input type ="radio" id="pregunta1n"  name ="preg3"></input> No 
+                       Dolor de cabeza <input type ="radio" id="pregunta3n" name ="preg4"></input> Si  <input type ="radio" id="pregunta3n"  name ="preg4"></input> No 
                     </fieldset>
                     <fieldset id = "pregunta5" className ="form-camp">
-                       Dificultad para respirar o sensación de falta de aire <input type ="radio" id="pregunta1y" name ="preg3"></input> Si  <input type ="radio" id="pregunta1n"  name ="preg3"></input> No 
+                       Dificultad para respirar o sensación de falta de aire <input type ="radio" id="pregunta4n" name ="preg5"></input> Si  <input type ="radio" id="pregunta4n"  name ="preg5"></input> No 
                     </fieldset>
                     <fieldset id = "pregunta6" className ="form-camp">
-                       Dolor o presión en el pecho <input type ="radio" id="pregunta1y" name ="preg3"></input> Si  <input type ="radio" id="pregunta1n"  name ="preg3"></input> No 
+                       Dolor o presión en el pecho <input type ="radio" id="pregunta5n" name ="preg6"></input> Si  <input type ="radio" id="pregunta5n"  name ="preg6"></input> No 
                     </fieldset>
                     <fieldset id = "pregunta7" className ="form-camp">
-                    Erupciones cutáneas o pérdida del color en los dedos de las manos o de los pies <input type ="radio" id="pregunta1y" name ="preg3"></input> Si  <input type ="radio" id="pregunta1n"  name ="preg3"></input> No 
+                    Erupciones cutáneas o pérdida del color en los dedos de las manos o de los pies <input type ="radio" id="pregunta7y" name ="preg7"></input> Si  <input type ="radio" id="pregunta7y"  name ="preg7"></input> No 
                     </fieldset>
                     <fieldset id = "pregunta8" className ="form-camp"> 
                         Nivell Cansancio 
