@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import "./App.css";
 
 class App extends Component {
-  state = {web3: null, cuenta: null};
+  state = {web3: null, publicKey: null, privateKey:null};
 
   componentDidMount = async () => {
     try {
@@ -39,7 +39,10 @@ class App extends Component {
     }
   };
 
-  setCuenta = async (cuenta) => {
+  setCuenta = async (cuenta, privateKey) => {
+    console.log("HEY")
+    let response = await this.state.contract.methods.patientExists().call({ from: cuenta });
+    console.log(response)
     //const { accounts, contract } = this.state;
 
     // Stores a given value, 5 by default.
@@ -48,7 +51,9 @@ class App extends Component {
     // Get the value from the contract to prove it worked.
 
     // Update state with the result.
-    this.setState({cuenta: cuenta});
+    if(response == true){
+      this.setState({publicKey: cuenta, privateKey:privateKey});
+    }
   };
 
   render() {
@@ -57,24 +62,26 @@ class App extends Component {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
-    else if (this.state.cuenta==null) {
+    else if (this.state.publicKey==null) {
       output = <div className="center">
         <h1> BIENVENIDO </h1>
-        <br></br>Ingresa tu cuenta<br></br>
+        <br></br>Ingresa tu clave pública<br></br>
         <input type="text" id="cuenta"></input>
-        <button onClick={() => this.setCuenta(document.getElementById('cuenta').value)}>Entrar</button>
+        <br></br>Ingresa tu clave privada<br></br>
+        <input type="text" id="privateKey"></input><br/>
+        <button onClick={() => this.setCuenta(document.getElementById('cuenta').value, document.getElementById('privateKey').value)}>Entrar</button>
       </div>
     }
 
     else {
-      {console.log(this.state.cuenta)}
-      output = <Menu cuenta = {this.state.cuenta}> </Menu>
+      {console.log(this.state.publicKey)}
+      output = <Menu utils = {this.state}> </Menu>
     }
     return (
       <div>
         <Router>
          <div className="topnav">
-                    <Link to="/">COVID-19 Tracking</Link>
+                    <Link to="/">WaniTracking</Link>
                 </div>
         </Router>
         {output}
