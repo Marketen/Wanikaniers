@@ -18,11 +18,16 @@ class Search extends Component {
         if (this.state.symptoms != null) {
             if(this.state.symptoms.length == 0) output = <div>No ha registrado ningún síntoma.</div>
             else{output =
-            <div>
+                
+            <div className ="center form2">
+                <br/><br/>
+                <table className = "table center">
+                <tr><td>DATE</td><td>TEMPERATURE</td></tr>
                 {this.state.symptoms.map(item => {
                     let date = new Date((item.date)*1000);
-                    return <div>{date+" "+item.fever/100} </div>
+                    return <tr><td>{date.toString()}</td>  <td>{(item.fever/100).toString()} </td></tr>
                 })}
+                </table>
             </div>}
         }
         return (

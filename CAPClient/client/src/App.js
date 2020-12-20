@@ -154,7 +154,7 @@ class App extends Component {
       // this could be provider.addresses[0] if it exists
       from: publicKey,
       // target address, this could be a smart contract address
-      to: "0x3b088A972E892d956642c03c1750C9fe1Df628Aa",
+      to: "0xa0A7D5a8E5d02697236f5fcDd3bCD4832dd36106",
       // this encodes the ABI of the method and the arguements
       data: this.state.contract.methods.registerCAP(20).encodeABI(),
       gasPrice: 0,
