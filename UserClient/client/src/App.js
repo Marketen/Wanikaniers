@@ -81,7 +81,7 @@ class App extends Component {
       <div>
         <Router>
          <div className="topnav">
-                    <Link to="/">COVID-19 Tracking</Link>
+                    <Link to="/">WaniTracking</Link>
                 </div>
         </Router>
         {output}

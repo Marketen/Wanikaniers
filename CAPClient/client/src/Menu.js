@@ -56,7 +56,7 @@ class Menu extends Component {
             <Router>
                 <Route>
                     <div className="topnav">
-                        <Link to="/">Menu</Link>
+                        <Link to="/">WaniTracking</Link>
                         <Link to="/register">Register</Link>
                         <Link to="/search">Search Patient</Link>
                         <Link to="/list">List all Patients</Link>
@@ -73,7 +73,7 @@ class Menu extends Component {
                     <List utils={this.props.utils} />
                 )} />
                 <Route exact={true} path="/" render={() => (
-                    <div>menu</div>
+                    <div>WaniTracking</div>
                 )} />
 
                 {/* <br></br><br></br>
