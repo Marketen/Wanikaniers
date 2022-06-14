@@ -4,9 +4,8 @@ pipeline {
     stage('Build') {
       agent any
       steps {
-        sh '''echo "hola"
-cd "./CAPClient"'''
-        sh 'npm install'
+        sh 'npm --version'
+        sh 'npm install truffle'
       }
     }
 
