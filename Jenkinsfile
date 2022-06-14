@@ -4,9 +4,8 @@ pipeline {
     stage('Build') {
       agent any
       steps {
-        sh '''apt-get install npm
-npm --version'''
-        sh 'npm install truffle'
+        sh '''npm --version'''
+        sh 'truffle version'
       }
     }
 
