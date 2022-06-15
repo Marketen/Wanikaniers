@@ -6,6 +6,8 @@ pipeline {
       steps {
         sh '''npm --version'''
         sh 'truffle version'
+        sh 'pwd'
+        sh 'ls -la'
       }
     }
 
