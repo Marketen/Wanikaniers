@@ -4,10 +4,9 @@ pipeline {
     stage('Build') {
       agent any
       steps {
-        sh '''npm --version'''
-        sh 'truffle version'
-        sh 'pwd'
-        sh 'ls -la'
+        sh 'docker ps'
+        sh 'cd CAPClient'
+        sh 'truffle compile'
       }
     }
 
